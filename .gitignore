@@ -1,0 +1,39 @@
+# 模型权重（太大，不上传）
+checkpoints/
+*.pth
+
+# TensorBoard 日志
+runs/
+
+# 评估输出
+results/
+
+# Python 缓存
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 编辑器
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# macOS 元数据
+__MACOSX/
+.DS_Store
+
+# 日志文件
+*.log
+
+# Conda 环境
+conda_env.yaml
+environment.yaml
+
+# 数据集（太大，不上传）
+TrainDataset/
+TestDataset/
+
+# 项目文档
+prompt.md
