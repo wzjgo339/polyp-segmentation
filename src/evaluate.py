@@ -29,7 +29,7 @@ from config import (
 from src.model import create_model
 from src.dataset import PolypDataset
 from src.metrics import compute_all_metrics
-from src.utils import set_seed, ensure_dir, denormalize_mask
+from src.utils import set_seed, ensure_dir, denormalize_mask, imwrite_unicode
 from torch.utils.data import DataLoader
 
 
@@ -88,7 +88,7 @@ def visualize_prediction(image, mask_gt, mask_pred, save_path):
                 cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
 
     vis_bgr = cv2.cvtColor(vis, cv2.COLOR_RGB2BGR)
-    ret = cv2.imwrite(str(save_path), vis_bgr)
+    ret = imwrite_unicode(save_path, vis_bgr)
     if not ret:
         PILImage.fromarray(vis).save(str(save_path))
 

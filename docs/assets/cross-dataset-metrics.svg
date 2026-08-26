@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="430" viewBox="0 0 920 430" role="img" aria-labelledby="title desc">
+  <title id="title">Cross-dataset segmentation performance</title>
+  <desc id="desc">Dice and IoU scores on five polyp segmentation datasets.</desc>
+  <rect width="920" height="430" rx="18" fill="#0d1117"/>
+  <text x="36" y="42" fill="#f0f6fc" font-family="Arial, sans-serif" font-size="23" font-weight="700">Cross-dataset performance</text>
+  <circle cx="661" cy="34" r="6" fill="#58a6ff"/><text x="675" y="39" fill="#c9d1d9" font-family="Arial, sans-serif" font-size="14">Dice</text>
+  <circle cx="746" cy="34" r="6" fill="#3fb950"/><text x="760" y="39" fill="#c9d1d9" font-family="Arial, sans-serif" font-size="14">IoU</text>
+
+  <g stroke="#30363d" stroke-width="1">
+    <line x1="190" y1="70" x2="190" y2="373"/><line x1="318" y1="70" x2="318" y2="373"/>
+    <line x1="446" y1="70" x2="446" y2="373"/><line x1="574" y1="70" x2="574" y2="373"/>
+    <line x1="702" y1="70" x2="702" y2="373"/><line x1="830" y1="70" x2="830" y2="373"/>
+  </g>
+  <g fill="#8b949e" font-family="Arial, sans-serif" font-size="12" text-anchor="middle">
+    <text x="190" y="397">0.0</text><text x="318" y="397">0.2</text><text x="446" y="397">0.4</text>
+    <text x="574" y="397">0.6</text><text x="702" y="397">0.8</text><text x="830" y="397">1.0</text>
+  </g>
+
+  <g fill="#c9d1d9" font-family="Arial, sans-serif" font-size="14" text-anchor="end">
+    <text x="172" y="101">CVC-300</text><text x="172" y="161">CVC-ClinicDB</text>
+    <text x="172" y="221">CVC-ColonDB</text><text x="172" y="281">ETIS</text><text x="172" y="341">Kvasir</text>
+  </g>
+
+  <g>
+    <rect x="190" y="82" width="588.4" height="18" rx="4" fill="#58a6ff"/><rect x="190" y="104" width="549.1" height="12" rx="4" fill="#3fb950"/>
+    <rect x="190" y="142" width="582.1" height="18" rx="4" fill="#58a6ff"/><rect x="190" y="164" width="550.6" height="12" rx="4" fill="#3fb950"/>
+    <rect x="190" y="202" width="490.8" height="18" rx="4" fill="#58a6ff"/><rect x="190" y="224" width="437.1" height="12" rx="4" fill="#3fb950"/>
+    <rect x="190" y="262" width="501.7" height="18" rx="4" fill="#58a6ff"/><rect x="190" y="284" width="452.9" height="12" rx="4" fill="#3fb950"/>
+    <rect x="190" y="322" width="577.6" height="18" rx="4" fill="#58a6ff"/><rect x="190" y="344" width="542.6" height="12" rx="4" fill="#3fb950"/>
+  </g>
+  <g fill="#f0f6fc" font-family="Arial, sans-serif" font-size="12">
+    <text x="786" y="96">0.9193</text><text x="747" y="115">0.8580</text>
+    <text x="780" y="156">0.9095</text><text x="748" y="175">0.8603</text>
+    <text x="689" y="216">0.7668</text><text x="635" y="235">0.6830</text>
+    <text x="700" y="276">0.7839</text><text x="651" y="295">0.7076</text>
+    <text x="776" y="336">0.9025</text><text x="740" y="355">0.8478</text>
+  </g>
+  <text x="36" y="414" fill="#8b949e" font-family="Arial, sans-serif" font-size="12">Mean Dice 0.8564 · Mean IoU 0.7913 · best_model.pth</text>
+</svg>

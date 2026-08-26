@@ -30,6 +30,8 @@ __MACOSX/
 # Conda 环境
 conda_env.yaml
 environment.yaml
+.venv/
+.venv-win/
 
 # 数据集（太大，不上传）
 TrainDataset/

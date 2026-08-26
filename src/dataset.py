@@ -147,7 +147,6 @@ def get_train_transform(target_size=None):
         A.ElasticTransform(
             alpha=aug["elastic_alpha"],
             sigma=aug["elastic_sigma"],
-            alpha_affine=aug["elastic_alpha_affine"],
             p=aug["elastic_prob"],
         ),
         A.RandomBrightnessContrast(

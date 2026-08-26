@@ -33,9 +33,11 @@ INPUT_WIDTH = 384
 TRAIN_VAL_SPLIT = 0.9  # 90% 训练, 10% 验证
 
 # ========== 训练超参数 ==========
-BATCH_SIZE = 16
+# RTX 5060 Ti 在 512×512、encoder 解冻后使用 16 会超过当前可用显存。
+# 12 保留 multi-scale 训练，同时为 Windows 桌面显存预留安全余量。
+BATCH_SIZE = 12
 NUM_EPOCHS = 150
-NUM_WORKERS = 2  # Windows 下 DataLoader workers 数不宜太高
+NUM_WORKERS = 0  # Windows 多进程 worker 会额外占用提交内存；0 最稳定
 PIN_MEMORY = True
 
 # ========== 优化器 ==========
@@ -85,7 +87,6 @@ AUGMENTATION = {
     "shift_scale_rotate_prob": 0.5,
     "elastic_alpha": 1,
     "elastic_sigma": 50,
-    "elastic_alpha_affine": 50,
     "elastic_prob": 0.3,
     "brightness_limit": 0.15,
     "contrast_limit": 0.15,

@@ -1,0 +1,11 @@
+--extra-index-url https://download.pytorch.org/whl/cu128
+
+torch==2.11.0+cu128
+torchvision==0.26.0+cu128
+segmentation-models-pytorch==0.5.0
+albumentations==1.4.24
+opencv-python-headless==5.0.0.93
+tensorboardX==2.6.5
+numpy==2.5.2
+Pillow==12.3.0
+gdown==6.1.0

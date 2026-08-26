@@ -15,6 +15,7 @@
     - 早停机制
 """
 import sys
+import argparse
 sys.path.insert(0, '.')
 
 from src.dataset import create_dataloaders
@@ -24,6 +25,13 @@ from config import SEED
 
 
 def main():
+    parser = argparse.ArgumentParser(description="训练肠息肉分割模型")
+    parser.add_argument(
+        "--resume", action="store_true",
+        help="从 checkpoints/best_model.pth 继续训练",
+    )
+    args = parser.parse_args()
+
     print("=" * 50)
     print("  肠息肉分割系统 — 训练")
     print("  Model: U-Net + EfficientNet-B4")
@@ -42,7 +50,9 @@ def main():
         print(f"[Data] Multi-scale 训练: {sizes}")
 
     # 启动训练
-    model, best_epoch = run_training(train_loader, val_loader, train_dataset)
+    model, best_epoch = run_training(
+        train_loader, val_loader, train_dataset, resume=args.resume
+    )
 
     print(f"\n训练完成! 最佳模型保存在 checkpoints/best_model.pth")
     print(f"最佳验证 Dice: epoch {best_epoch}")

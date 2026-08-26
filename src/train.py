@@ -158,7 +158,7 @@ def validate(model, loader, criterion, device, epoch, writer):
     return avg_loss, avg_dice, avg_iou
 
 
-def run_training(train_loader, val_loader, train_dataset=None):
+def run_training(train_loader, val_loader, train_dataset=None, resume=False):
     """
     完整训练流程
 
@@ -188,8 +188,18 @@ def run_training(train_loader, val_loader, train_dataset=None):
     model = create_model()
     model = model.to(device)
 
-    # 初始冻结 encoder
-    freeze_encoder(model, freeze=True)
+    checkpoint_path = CHECKPOINT_DIR / "best_model.pth"
+    checkpoint = None
+    if resume:
+        if not checkpoint_path.exists():
+            raise FileNotFoundError(f"无法续训，未找到 {checkpoint_path}")
+        checkpoint = torch.load(str(checkpoint_path), map_location=device)
+        model.load_state_dict(checkpoint["model_state_dict"])
+        freeze_encoder(model, freeze=False)
+        print(f"[Resume] 已加载 checkpoint: epoch {checkpoint['epoch']}")
+    else:
+        # 初始冻结 encoder
+        freeze_encoder(model, freeze=True)
 
     # 损失函数
     criterion = get_loss_fn(LOSS)
@@ -203,8 +213,17 @@ def run_training(train_loader, val_loader, train_dataset=None):
         betas=BETAS,
     )
 
+    if checkpoint is not None:
+        optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
+
     # 学习率调度
-    scheduler = CosineAnnealingLR(optimizer, T_max=NUM_EPOCHS, eta_min=1e-6)
+    remaining_epochs = max(1, NUM_EPOCHS - checkpoint["epoch"]) \
+        if checkpoint is not None else NUM_EPOCHS
+    scheduler = CosineAnnealingLR(
+        optimizer, T_max=remaining_epochs, eta_min=1e-6
+    )
+    if checkpoint is not None and "scheduler_state_dict" in checkpoint:
+        scheduler.load_state_dict(checkpoint["scheduler_state_dict"])
 
     # AMP GradScaler
     scaler = GradScaler('cuda', enabled=USE_AMP)
@@ -218,12 +237,13 @@ def run_training(train_loader, val_loader, train_dataset=None):
                              f"amp={USE_AMP}")
 
     # 训练循环
-    best_dice = 0.0
-    best_epoch = 0
+    best_dice = checkpoint.get("best_dice", 0.0) if checkpoint else 0.0
+    best_epoch = checkpoint.get("epoch", 0) if checkpoint else 0
     patience_counter = 0
     training_start = time.time()
+    start_epoch = checkpoint["epoch"] + 1 if checkpoint else 1
 
-    for epoch in range(1, NUM_EPOCHS + 1):
+    for epoch in range(start_epoch, NUM_EPOCHS + 1):
         epoch_start = time.time()
 
         # Multi-scale: 随机切换训练尺寸
@@ -280,11 +300,11 @@ def run_training(train_loader, val_loader, train_dataset=None):
             best_epoch = epoch
             patience_counter = 0
 
-            checkpoint_path = CHECKPOINT_DIR / "best_model.pth"
             torch.save({
                 "epoch": epoch,
                 "model_state_dict": model.state_dict(),
                 "optimizer_state_dict": optimizer.state_dict(),
+                "scheduler_state_dict": scheduler.state_dict(),
                 "best_dice": best_dice,
                 "best_iou": val_iou,
             }, str(checkpoint_path))

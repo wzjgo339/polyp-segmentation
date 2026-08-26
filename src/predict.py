@@ -19,7 +19,7 @@ from config import (
     PREDICT_THRESHOLD, CHECKPOINT_DIR,
 )
 from src.model import create_model
-from src.utils import ensure_dir
+from src.utils import ensure_dir, imread_unicode, imwrite_unicode
 
 
 def get_predict_transform():
@@ -133,7 +133,8 @@ def visualize_prediction(image, mask_bin, prob_map, save_path=None):
 
     if save_path:
         ensure_dir(save_path.parent)
-        cv2.imwrite(str(save_path), vis)
+        if not imwrite_unicode(save_path, vis):
+            raise IOError(f"无法保存可视化图像: {save_path}")
         print(f"[Predict] 可视化已保存: {save_path}")
 
     return vis
@@ -159,7 +160,7 @@ def predict_image(image_path, checkpoint_path=None, output_dir=None, tta=False):
         output_dir = RESULT_DIR / "predict"
 
     # 加载图像
-    image = cv2.imread(str(image_path))
+    image = imread_unicode(image_path)
     if image is None:
         raise IOError(f"无法读取图像: {image_path}")
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -179,7 +180,8 @@ def predict_image(image_path, checkpoint_path=None, output_dir=None, tta=False):
 
     # 保存 mask
     mask_save_path = output_dir / f"{image_path.stem}_mask.png"
-    cv2.imwrite(str(mask_save_path), mask_bin)
+    if not imwrite_unicode(mask_save_path, mask_bin):
+        raise IOError(f"无法保存 Mask: {mask_save_path}")
 
     print(f"[Predict] 推理完成!")
     print(f"  - 输入图像: {image_path}")

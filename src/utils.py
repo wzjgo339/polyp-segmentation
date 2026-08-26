@@ -3,6 +3,7 @@
 """
 import os
 import random
+import cv2
 import numpy as np
 import torch
 from pathlib import Path
@@ -24,6 +25,30 @@ def set_seed(seed: int = 42):
 def ensure_dir(path):
     """确保目录存在，不存在则创建"""
     Path(path).mkdir(parents=True, exist_ok=True)
+
+
+def imread_unicode(path, flags=cv2.IMREAD_COLOR):
+    """读取包含中文等 Unicode 字符的 Windows 图片路径。"""
+    try:
+        data = np.fromfile(str(path), dtype=np.uint8)
+    except OSError:
+        return None
+    return cv2.imdecode(data, flags) if data.size else None
+
+
+def imwrite_unicode(path, image, params=None):
+    """写入包含中文等 Unicode 字符的 Windows 图片路径。"""
+    path = Path(path)
+    ensure_dir(path.parent)
+    extension = path.suffix or ".png"
+    ok, encoded = cv2.imencode(extension, image, params or [])
+    if not ok:
+        return False
+    try:
+        encoded.tofile(str(path))
+    except OSError:
+        return False
+    return True
 
 
 def normalize_mask(mask):
